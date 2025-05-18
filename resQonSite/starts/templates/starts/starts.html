@@ -1,0 +1,1222 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Started - ResQon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ff3e3e;
+            --secondary: #4d00e6;
+            --accent: #00f2ff;
+            --dark: #0a0a0a;
+            --darker: #050505;
+            --gray-dark: #181818;
+            --gray: #333;
+            --light-gray: #aaa;
+            --white: #fff;
+            --glow-red: 0 0 20px rgba(255, 62, 62, 0.4);
+            --glow-blue: 0 0 20px rgba(0, 242, 255, 0.4);
+            --gradient-red: linear-gradient(45deg, var(--primary), #ff7b00);
+            --gradient-blue: linear-gradient(45deg, var(--secondary), var(--accent));
+            --card-bg: linear-gradient(145deg, rgba(30, 30, 30, 0.4), rgba(15, 15, 15, 0.6));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--dark);
+            color: var(--white);
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 80% 20%, rgba(77, 0, 230, 0.15), transparent 50%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .back-to-home {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-to-home:hover {
+            background: var(--gradient-red);
+            transform: translateX(-5px);
+        }
+
+        .header {
+            text-align: center;
+            margin: 5rem 0 4rem;
+            position: relative;
+        }
+
+        .header h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-red);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            display: inline-block;
+        }
+
+        .header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--gradient-red);
+            border-radius: 2px;
+        }
+
+        .header p {
+            color: var(--light-gray);
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 1.5rem auto 0;
+        }
+
+        .section {
+            margin-bottom: 5rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+
+        .section.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--white);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--primary);
+        }
+
+        .section-description {
+            color: var(--light-gray);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            max-width: 900px;
+            line-height: 1.8;
+        }
+
+        .purchase-model {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .model-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+
+        .model-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .model-header {
+            background: var(--gradient-red);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .model-header.subscription {
+            background: var(--gradient-blue);
+        }
+
+        .model-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--white);
+        }
+
+        .model-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .model-content {
+            padding: 2.5rem;
+        }
+
+        .model-description {
+            color: var(--light-gray);
+            font-size: 1.05rem;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .includes-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.3rem;
+            margin: 2rem 0 1.5rem;
+            color: var(--accent);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+        }
+
+        .included-items {
+            list-style: none;
+        }
+
+        .included-items li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--light-gray);
+        }
+
+        .included-items li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .subscription .included-items li::before {
+            color: var(--accent);
+        }
+
+        .drone-packages {
+            margin-top: 5rem;
+        }
+
+        .package-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+            text-align: center;
+        }
+
+        .package-subtitle {
+            color: var(--light-gray);
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+        }
+
+        .package-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .package-card.featured {
+            border: 2px solid var(--primary);
+            box-shadow: 0 10px 30px rgba(255, 62, 62, 0.2);
+            transform: scale(1.05);
+        }
+
+        .featured-tag {
+            position: absolute;
+            top: 15px;
+            right: -35px;
+            background: var(--gradient-red);
+            padding: 0.5rem 2.5rem;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--white);
+            z-index: 2;
+        }
+
+        .package-card:hover:not(.featured) {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .package-card.featured:hover {
+            transform: scale(1.05) translateY(-5px);
+        }
+
+        .package-type {
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .package-name {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .package-description {
+            color: var(--light-gray);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .package-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .package-price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--light-gray);
+        }
+
+        .price-note {
+            color: var(--light-gray);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .package-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .package-features li {
+            margin-bottom: 1rem;
+            padding-left: 1.8rem;
+            position: relative;
+            color: var(--light-gray);
+        }
+
+        .package-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .subscription-features li::before {
+            color: var(--accent);
+        }
+
+        .package-button {
+            display: inline-block;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: var(--gradient-red);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: var(--glow-red);
+            text-align: center;
+        }
+
+        .package-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 62, 62, 0.3);
+        }
+
+        .subscription-button {
+            background: var(--gradient-blue);
+            box-shadow: var(--glow-blue);
+        }
+
+        .subscription-button:hover {
+            box-shadow: 0 10px 20px rgba(0, 242, 255, 0.3);
+        }
+
+        .process-section {
+            margin: 6rem 0;
+            text-align: center;
+        }
+
+        .process-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+        }
+
+        .process-description {
+            color: var(--light-gray);
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 4rem;
+            line-height: 1.8;
+        }
+
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 0;
+        }
+
+        .step-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--white);
+            box-shadow: var(--glow-red);
+            position: relative;
+        }
+
+        .step-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .step-description {
+            color: var(--light-gray);
+            font-size: 1rem;
+            max-width: 250px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .implementation-section {
+            text-align: center;
+            margin: 6rem 0;
+            padding: 4rem;
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .implementation-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+        }
+
+        .implementation-description {
+            color: var(--light-gray);
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+        }
+
+        .implementation-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .implementation-card {
+            background: rgba(30, 30, 30, 0.5);
+            border-radius: 15px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease;
+            text-align: left;
+        }
+
+        .implementation-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .implementation-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--glow-red);
+        }
+
+        .implementation-icon i {
+            font-size: 1.5rem;
+            color: var(--white);
+        }
+
+        .implementation-card-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .implementation-text {
+            color: var(--light-gray);
+            line-height: 1.7;
+        }
+
+        .faq-section {
+            margin: 6rem 0;
+        }
+
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            cursor: pointer;
+            font-family: 'Sora', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question::after {
+            content: '+';
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-question.active {
+            background: var(--gray-dark);
+        }
+
+        .faq-question.active::after {
+            content: '−';
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            background: rgba(30, 30, 30, 0.5);
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.5s ease;
+        }
+
+        .faq-answer.active {
+            padding: 1.5rem;
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            color: var(--light-gray);
+            line-height: 1.8;
+        }
+
+        .cta-section {
+            text-align: center;
+            margin: 6rem 0;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 4rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://via.placeholder.com/1920x1080') center/cover no-repeat;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .cta-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+        }
+
+        .cta-text {
+            color: var(--light-gray);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1.2rem 3rem;
+            background: var(--gradient-red);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: var(--glow-red);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255, 62, 62, 0.3);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            border: 1px solid var(--accent);
+            box-shadow: var(--glow-blue);
+        }
+
+        .cta-button.secondary:hover {
+            background: var(--accent);
+            color: var(--dark);
+            box-shadow: 0 15px 30px rgba(0, 242, 255, 0.3);
+        }
+
+        .contact-section {
+            margin: 6rem 0;
+            text-align: center;
+        }
+
+        .contact-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 3rem auto 0;
+        }
+
+        .contact-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .contact-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            box-shadow: var(--glow-red);
+        }
+
+        .contact-icon i {
+            font-size: 2.5rem;
+            color: var(--white);
+        }
+
+        .contact-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .contact-text {
+            color: var(--light-gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            display: inline-block;
+        }
+
+        .contact-link:hover {
+            color: var(--primary);
+        }
+
+        footer {
+            margin-top: 4rem;
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        footer p {
+            color: var(--light-gray);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1200px) {
+            .purchase-model {
+                grid-template-columns: 1fr;
+            }
+
+            .packages-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+
+            .steps-container {
+                flex-direction: column;
+                gap: 3rem;
+            }
+
+            .steps-container::before {
+                display: none;
+            }
+
+            .step-description {
+                max-width: 100%;
+            }
+
+            .implementation-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+
+            .contact-cards {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .back-to-home {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-to-home">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Home</span>
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <h1>Get Started with ResQon</h1>
+            <p>Learn how our AI-powered rescue drone system integrates into fire emergency protocols</p>
+        </div>
+
+        <section class="section business-model-section" id="business-model">
+            <h2 class="section-title">Our Solution Model</h2>
+            <p class="section-description">ResQon is designed specifically for fire departments and emergency response teams, with a purchasing model that combines advanced hardware with ongoing support and updates. We understand the critical nature of rescue operations and have structured our offering to ensure maximum reliability and performance.</p>
+            
+            <div class="purchase-model">
+                <div class="model-card">
+                    <div class="model-header">
+                        <h3 class="model-title">Hardware System</h3>
+                        <p class="model-subtitle">One-time equipment investment</p>
+                    </div>
+                    <div class="model-content">
+                        <p class="model-description">The ResQon hardware system includes fire-resistant drones equipped with advanced sensors, control stations, and all necessary deployment equipment. This one-time investment provides your department with the physical tools needed to transform rescue operations.</p>
+                        
+                        <h4 class="includes-title">What's Included</h4>
+                        <ul class="included-items">
+                            <li>Fire-resistant rescue drone(s) with thermal imaging</li>
+                            <li>Control station with emergency response interface</li>
+                            <li>Deployment and charging station</li>
+                            <li>Professional installation at your facility</li>
+                            <li>Integration with existing emergency systems</li>
+                            <li>On-site team training (tailored to department size)</li>
+                            <li>Emergency deployment kits and accessories</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="model-card">
+                    <div class="model-header subscription">
+                        <h3 class="model-title">Support & Maintenance</h3>
+                        <p class="model-subtitle">Annual subscription service</p>
+                    </div>
+                    <div class="model-content">
+                        <p class="model-description">Our annual support and maintenance subscription ensures your ResQon system remains at peak performance with the latest AI algorithms, regular maintenance, and priority technical support. This service is designed to integrate seamlessly with fire department protocols and budgets.</p>
+                        
+                        <h4 class="includes-title">What's Included</h4>
+                        <ul class="included-items">
+                            <li>Regular AI algorithm and software updates</li>
+                            <li>Quarterly preventive maintenance visits</li>
+                            <li>24/7 emergency technical support</li>
+                            <li>Post-incident data analysis and reports</li>
+                            <li>Replacement parts and repairs</li>
+                            <li>Annual protocol integration reviews</li>
+                            <li>Refresher training for new team members</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="drone-packages">
+            <h3 class="package-title">Fire Department Solutions</h3>
+            <p class="package-subtitle">Choose the right system based on your department's size and coverage requirements</p>
+            
+            <div class="packages-grid">
+                <div class="package-card">
+                    <p class="package-type">Hardware</p>
+                    <h3 class="package-name">Standard Station System</h3>
+                    <p class="package-description">Ideal for single fire stations covering small to medium municipalities.</p>
+                    <div class="package-price">$35,000</div>
+                    <p class="price-note">One-time purchase with installation</p>
+                    <ul class="package-features">
+                        <li>1 ResQon Drone Unit</li>
+                        <li>Standard Control Station</li>
+                        <li>Basic Sensor Package</li>
+                        <li>Single Station Installation</li>
+                        <li>2-Day Team Training</li>
+                        <li>Local Building Map Integration</li>
+                    </ul>
+                    <a href="#contact" class="package-button">Request Quote</a>
+                </div>
+
+                <div class="package-card featured">
+                    <div class="featured-tag">Most Popular</div>
+                    <p class="package-type">Hardware</p>
+                    <h3 class="package-name">Department System</h3>
+                    <p class="package-description">Comprehensive solution for mid-sized fire departments with multiple stations.</p>
+                    <div class="package-price">$75,000</div>
+                    <p class="price-note">One-time purchase with installation</p>
+                    <ul class="package-features">
+                        <li>3 ResQon Drone Units</li>
+                        <li>Advanced Control Station</li>
+                        <li>Complete Sensor Array</li>
+                        <li>Multi-Station Installation</li>
+                        <li>4-Day Team Training</li>
+                        <li>City-wide Building Integration</li>
+                    </ul>
+                    <a href="#contact" class="package-button">Request Quote</a>
+                </div>
+
+                <div class="package-card">
+                    <p class="package-type">Hardware</p>
+                    <h3 class="package-name">Metropolitan System</h3>
+                    <p class="package-description">Comprehensive solution for large urban fire departments with multiple stations.</p>
+                    <div class="package-price">$120,000</div>
+                    <p class="price-note">One-time purchase with installation</p>
+                    <ul class="package-features">
+                        <li>6 ResQon Drone Units</li>
+                        <li>Command Center Integration</li>
+                        <li>Premium Sensor Package</li>
+                        <li>Metro-wide Installation</li>
+                        <li>6-Day Department Training</li>
+                        <li>Full Building Database Integration</li>
+                    </ul>
+                    <a href="#contact" class="package-button">Request Quote</a>
+                </div>
+            </div>
+
+            <div class="packages-grid" style="margin-top: 3rem;">
+                <div class="package-card">
+                    <p class="package-type">Subscription</p>
+                    <h3 class="package-name">Essential Support</h3>
+                    <p class="package-description">Basic annual maintenance and support package for single-station operations.</p>
+                    <div class="package-price">$7,500<span>/year</span></div>
+                    <p class="price-note">Aligns with municipal budget cycles</p>
+                    <ul class="package-features subscription-features">
+                        <li>Software & AI Updates</li>
+                        <li>Semi-Annual Maintenance</li>
+                        <li>Standard Technical Support</li>
+                        <li>Basic Incident Reports</li>
+                        <li>Parts Replacement (Basic)</li>
+                        <li>Annual Protocol Review</li>
+                    </ul>
+                    <a href="#contact" class="package-button subscription-button">Subscribe</a>
+                </div>
+                
+                <div class="package-card featured">
+                    <div class="featured-tag">Most Popular</div>
+                    <p class="package-type">Subscription</p>
+                    <h3 class="package-name">Department Support</h3>
+                    <p class="package-description">Comprehensive maintenance and support for multi-station departments.</p>
+                    <div class="package-price">$15,000<span>/year</span></div>
+                    <p class="price-note">Aligns with municipal budget cycles</p>
+                    <ul class="package-features subscription-features">
+                        <li>Priority Software & AI Updates</li>
+                        <li>Quarterly Maintenance</li>
+                        <li>24/7 Technical Support</li>
+                        <li>Detailed Incident Analytics</li>
+                        <li>Full Parts Replacement</li>
+                        <li>Bi-Annual Protocol Optimization</li>
+                    </ul>
+                    <a href="#contact" class="package-button subscription-button">Subscribe</a>
+                </div>
+                
+                <div class="package-card">
+                    <p class="package-type">Subscription</p>
+                    <h3 class="package-name">Metro Support</h3>
+                    <p class="package-description">Premium support for large metropolitan fire departments.</p>
+                    <div class="package-price">$25,000<span>/year</span></div>
+                    <p class="price-note">Aligns with municipal budget cycles</p>
+                    <ul class="package-features subscription-features">
+                        <li>Early Access Updates</li>
+                        <li>Monthly Maintenance</li>
+                        <li>Emergency Priority Support</li>
+                        <li>Advanced Analytics Platform</li>
+                        <li>Complete Fleet Management</li>
+                        <li>Quarterly Protocol Optimization</li>
+                    </ul>
+                    <a href="#contact" class="package-button subscription-button">Subscribe</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="process-section">
+            <h2 class="process-title">Implementation Process</h2>
+            <p class="process-description">Our streamlined approach ensures seamless integration with your existing fire emergency protocols</p>
+            
+            <div class="steps-container">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Needs Assessment</h3>
+                    <p class="step-description">We evaluate your department's specific rescue protocols and facility requirements.</p>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">System Design</h3>
+                    <p class="step-description">Custom configuration of hardware and software to match your department's needs.</p>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Installation</h3>
+                    <p class="step-description">Professional deployment with minimal disruption to daily operations.</p>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Training</h3>
+                    <p class="step-description">Comprehensive training for emergency response teams and command staff.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="implementation-section">
+            <h2 class="implementation-title">Protocol Integration</h2>
+            <p class="implementation-description">ResQon seamlessly integrates into existing fire department emergency protocols</p>
+            
+            <div class="implementation-grid">
+                <div class="implementation-card">
+                    <div class="implementation-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h3 class="implementation-card-title">Standard Operating Procedures</h3>
+                    <p class="implementation-text">We work with your department to update SOPs to include drone deployment steps, ensuring clear protocols for all personnel during emergency response.</p>
+                </div>
+                
+                <div class="implementation-card">
+                    <div class="implementation-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3 class="implementation-card-title">Building Information Integration</h3>
+                    <p class="implementation-text">ResQon connects with existing building information databases to enable AI-powered navigation during emergencies, even in complex structures.</p>
+                </div>
+                
+                <div class="implementation-card">
+                    <div class="implementation-icon">
+                        <i class="fas fa-sitemap"></i>
+                    </div>
+                    <h3 class="implementation-card-title">Command Structure</h3>
+                    <p class="implementation-text">Our system integrates into incident command protocols, providing real-time information to decision-makers without disrupting established command chains.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="faq-section" id="faq">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="section-description">Common questions about integrating ResQon into fire department operations</p>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How does ResQon integrate with our existing fire protocols?
+                    </div>
+                    <div class="faq-answer">
+                        <p>ResQon is designed to complement, not replace, existing fire emergency protocols. During implementation, our team works with your department to identify optimal deployment points within your standard operating procedures. The system typically integrates at the initial scene assessment phase, where the drone can be deployed to gather critical information before firefighter entry. We provide comprehensive SOP templates that can be customized to your department's specific needs and protocols.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What training is required for our firefighters?
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our training program is designed with firefighters in mind - practical, efficient, and focused on emergency operations. The basic training includes drone operation (2-3 designated operators per shift), system deployment procedures for all personnel, and command staff integration training. The standard program takes 2-4 days depending on your department size, with refresher courses included in the annual subscription. No prior drone experience is required, and training is conducted at your facility to simulate actual emergency conditions.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How does the annual budget cycle align with your subscription model?
+                    </div>
+                    <div class="faq-answer">
+                        <p>We specifically designed our subscription model to align with municipal and department budget cycles. Subscriptions run on an annual basis with predictable costs, making it easier to include in department budgets. For departments with specific fiscal year requirements, we can adjust the billing cycle to match your budgetary timeline. We also offer multi-year subscription options with pricing advantages for departments that can commit to longer terms within their capital improvement plans.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Can the system operate in extreme fire conditions?
+                    </div>
+                    <div class="faq-answer">
+                        <p>ResQon drones are specifically engineered for fire emergency environments. They feature heat-resistant materials capable of withstanding temperatures up to 200°C (392°F) for short periods, specialized sensors that can see through heavy smoke, and advanced navigation systems that maintain stability in turbulent air conditions. While the drones should not be flown directly into flames, they can safely operate in the peripheral areas of active fire scenes where heat and smoke would prevent traditional reconnaissance.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What happens if a drone is damaged during an emergency operation?
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our subscription service includes replacement coverage for drones damaged during legitimate emergency operations. We understand that rescue scenarios are unpredictable, and equipment can be damaged in the line of duty. For departments with the Department Support or Metro Support subscriptions, we maintain a rapid replacement program that can have a new unit deployed to your department within 48 hours. Basic subscribers receive replacement units within one week. Each case is reviewed, but our policy favors supporting departments without extensive claim processes.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How does the system comply with aviation regulations?
+                    </div>
+                    <div class="faq-answer">
+                        <p>ResQon is fully compliant with emergency service drone regulations in most jurisdictions. In the United States, the system operates under the FAA's Part 107 rules with public safety waivers. Our implementation process includes assistance with all necessary regulatory filings and certificates. We maintain a regulatory compliance database that is updated with each software release to ensure ongoing adherence to evolving drone laws. Our subscription service includes regulatory update briefings when significant changes occur in drone legislation affecting emergency services.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h2 class="cta-title">Ready to Transform Your Fire Rescue Capabilities?</h2>
+            <p class="cta-text">Contact our team today to schedule a consultation and discover how ResQon can enhance your department's emergency response effectiveness.</p>
+            <div class="cta-buttons">
+                <a href="#contact" class="cta-button">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Schedule Consultation</span>
+                </a>
+                <a href="mailto:firesafety@resqon.com" class="cta-button secondary">
+                    <i class="fas fa-envelope"></i>
+                    <span>Contact Our Team</span>
+                </a>
+            </div>
+        </section>
+        
+        <section class="contact-section" id="contact">
+            <h2 class="section-title">Contact Us</h2>
+            <p class="section-description">Our team specializes in fire department operations and is ready to assist with your specific needs</p>
+            
+            <div class="contact-cards">
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3 class="contact-title">Fire Service Specialists</h3>
+                    <p class="contact-text">Speak with our team of former firefighters who understand your department's unique challenges.</p>
+                    <a href="tel:+821234567890" class="contact-link">+82-123-456-7890</a>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3 class="contact-title">Department Inquiries</h3>
+                    <p class="contact-text">Send your questions or requirements for a customized proposal.</p>
+                    <a href="mailto:firesafety@resqon.com" class="contact-link">firesafety@resqon.com</a>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3 class="contact-title">Live Demonstration</h3>
+                    <p class="contact-text">Schedule a live demonstration at your facility or via video conference.</p>
+                    <a href="#" class="contact-link">Request Demo</a>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2025 ResQon. All Rights Reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Sections animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.section');
+            
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            
+            // FAQ toggle
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const answer = this.nextElementSibling;
+                    answer.classList.toggle('active');
+                    
+                    // Close other open FAQs
+                    faqQuestions.forEach(q => {
+                        if (q !== question && q.classList.contains('active')) {
+                            q.classList.remove('active');
+                            q.nextElementSibling.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

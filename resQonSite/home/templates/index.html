@@ -1,0 +1,2078 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResQon - AI-Powered Rescue Drone System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff3e3e;
+            --secondary: #4d00e6;
+            --accent: #00f2ff;
+            --dark: #0a0a0a;
+            --darker: #050505;
+            --gray-dark: #181818;
+            --gray: #333;
+            --light-gray: #aaa;
+            --white: #fff;
+            --glow-red: 0 0 20px rgba(255, 62, 62, 0.4);
+            --glow-blue: 0 0 20px rgba(0, 242, 255, 0.4);
+            --gradient-red: linear-gradient(45deg, var(--primary), #ff7b00);
+            --gradient-blue: linear-gradient(45deg, var(--secondary), var(--accent));
+            --card-bg: linear-gradient(145deg, rgba(30, 30, 30, 0.4), rgba(15, 15, 15, 0.6));
+            --section-padding: 120px 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--dark);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+            font-size: 16px;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            cursor: pointer;
+            font-family: 'Sora', sans-serif;
+            gap: 10px;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-100%);
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+        
+        .btn:hover::before {
+            transform: translateX(0);
+        }
+        
+        .btn-primary {
+            background: var(--gradient-red);
+            color: var(--white);
+            box-shadow: var(--glow-red);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 62, 62, 0.5);
+        }
+        
+        .btn-secondary {
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--white);
+            border: 1px solid var(--accent);
+            box-shadow: var(--glow-blue);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--accent);
+            color: var(--dark);
+            transform: translateY(-5px);
+            border-color: transparent;
+        }
+        
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.4s ease;
+            padding: 1.5rem 0;
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(10px);
+        }
+        
+        header.scrolled {
+            padding: 1rem 0;
+            background: rgba(5, 5, 5, 0.95);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Sora', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--white);
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+        
+        .logo span {
+            color: var(--primary);
+            position: relative;
+        }
+        
+        .logo span::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary);
+            box-shadow: var(--glow-red);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+        
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+            font-family: 'Sora', sans-serif;
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-red);
+            transition: all 0.3s ease;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-cta {
+            padding: 0.8rem 1.8rem;
+            background: var(--gradient-red);
+            border-radius: 50px;
+            color: var(--white);
+            box-shadow: var(--glow-red);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 62, 62, 0.5);
+            color: var(--white);
+        }
+        
+        .nav-cta::after {
+            display: none;
+        }
+        
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            position: relative;
+            background: linear-gradient(rgba(5, 5, 5, 0.7), rgba(5, 5, 5, 0.7)), url('https://via.placeholder.com/1920x1080');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 30%, var(--dark) 100%);
+        }
+        
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+            padding-left: 4rem;
+        }
+        
+        .hero-subtitle::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 3rem;
+            height: 2px;
+            background: var(--accent);
+            transform: translateY(-50%);
+        }
+        
+        .hero h1 {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.8rem;
+        }
+        
+        .hero h1 span {
+            background: var(--gradient-red);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .hero h1 span::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: var(--primary);
+            opacity: 0.2;
+            z-index: -1;
+        }
+        
+        .hero-description {
+            font-size: 1.2rem;
+            color: #ddd;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            line-height: 1.8;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .hero-image {
+            position: relative;
+            z-index: 2;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .hero-image img {
+            max-width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* Features Section */
+        .features {
+            padding: var(--section-padding);
+            position: relative;
+            background: var(--darker);
+        }
+        
+        .features::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 80% 20%, rgba(77, 0, 230, 0.15), transparent 50%);
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 6rem;
+            position: relative;
+        }
+        
+        .section-subtitle {
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            display: inline-block;
+            position: relative;
+        }
+        
+        .section-title {
+            font-size: 3.5rem;
+            margin-bottom: 1.8rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -0.8rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--gradient-red);
+            border-radius: 2px;
+        }
+        
+        .section-description {
+            max-width: 800px;
+            margin: 0 auto;
+            color: #bbb;
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            height: 100%;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--gradient-red);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(145deg, rgba(40, 40, 40, 0.4), rgba(20, 20, 20, 0.6));
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-red);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+            box-shadow: var(--glow-red);
+        }
+        
+        .feature-icon i {
+            font-size: 2.2rem;
+            color: var(--white);
+        }
+        
+        .feature-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .feature-description {
+            color: #bbb;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+            line-height: 1.8;
+        }
+        
+        .feature-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            gap: 8px;
+        }
+        
+        .feature-link:hover {
+            gap: 12px;
+            color: var(--primary);
+        }
+        
+        /* How It Works */
+        .how-it-works {
+            padding: var(--section-padding);
+            position: relative;
+            background: url('https://via.placeholder.com/1920x1080');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        .how-it-works::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(5, 5, 5, 0.95), rgba(5, 5, 5, 0.9));
+        }
+        
+        .steps {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .step {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 8rem;
+            position: relative;
+        }
+        
+        .step:last-child {
+            margin-bottom: 0;
+        }
+        
+        .step:nth-child(even) {
+            direction: rtl;
+        }
+        
+        .step:nth-child(even) .step-content {
+            direction: ltr;
+        }
+        
+        .step-content {
+            position: relative;
+        }
+        
+        .step-number {
+            font-size: 10rem;
+            font-weight: 800;
+            color: transparent;
+            -webkit-text-stroke: 2px var(--accent);
+            position: absolute;
+            top: -7rem;
+            left: -3rem;
+            opacity: 0.15;
+            z-index: -1;
+            font-family: 'Sora', sans-serif;
+        }
+        
+        .step-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.8rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .step-title::after {
+            content: '';
+            position: absolute;
+            bottom: -0.8rem;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--primary);
+        }
+        
+        .step-description {
+            color: #bbb;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        
+        .step-image {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .step-image img {
+            width: 100%;
+            display: block;
+            transition: all 0.5s ease;
+        }
+        
+        .step:hover .step-image img {
+            transform: scale(1.05);
+        }
+        
+        .connector {
+            position: absolute;
+            bottom: -4rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 8rem;
+            background: linear-gradient(to bottom, var(--accent), transparent);
+            z-index: 1;
+        }
+        
+        .step:last-child .connector {
+            display: none;
+        }
+        
+        /* Applications */
+        .applications {
+            padding: var(--section-padding);
+            background: var(--darker);
+            position: relative;
+        }
+        
+        .applications::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(255, 62, 62, 0.1), transparent 40%);
+        }
+        
+        .applications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .application-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            height: 100%;
+        }
+        
+        .application-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 5px;
+            background: var(--gradient-red);
+            border-radius: 0 0 5px 5px;
+        }
+        
+        .application-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(145deg, rgba(40, 40, 40, 0.4), rgba(20, 20, 20, 0.6));
+        }
+        
+        .application-icon {
+            width: 90px;
+            height: 90px;
+            background: var(--gradient-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            box-shadow: var(--glow-red);
+        }
+        
+        .application-icon i {
+            font-size: 2.8rem;
+            color: var(--white);
+        }
+        
+        .application-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .application-description {
+            color: #bbb;
+            line-height: 1.8;
+        }
+        
+        /* Team Members */
+        .team {
+            padding: var(--section-padding);
+            position: relative;
+            background: var(--darker);
+        }
+
+        .team::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 70%, rgba(77, 0, 230, 0.1), transparent 50%);
+            z-index: 0;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .team-member {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .team-member:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .member-image {
+            width: 100%;
+            height: 320px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .member-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .team-member:hover .member-image img {
+            transform: scale(1.05);
+        }
+
+        .member-info {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .member-name {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            background: var(--gradient-red);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .member-role {
+            color: var(--accent);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .member-bio {
+            color: #bbb;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .member-social {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .member-social a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .member-social a:hover {
+            background: var(--gradient-red);
+            transform: translateY(-5px);
+        }
+        
+        /* Contact */
+        .contact {
+            padding: var(--section-padding);
+            position: relative;
+            background: linear-gradient(rgba(5, 5, 5, 0.9), rgba(5, 5, 5, 0.9)), url('https://via.placeholder.com/1920x1080');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        .contact::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(77, 0, 230, 0.1) 0%, rgba(5, 5, 5, 0) 70%);
+        }
+        
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 4rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .contact-info {
+            position: relative;
+            padding: 3rem;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        
+        .contact-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            z-index: -1;
+        }
+        
+        .contact-info::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(255, 62, 62, 0.1), transparent 70%);
+            z-index: -1;
+        }
+        
+        .contact-info-inner {
+            position: relative;
+            z-index: 2;
+            padding: 1rem;
+        }
+        
+        .contact-title {
+            font-size: 2.8rem;
+            margin-bottom: 1.8rem;
+            position: relative;
+            display: inline-block;
+            background: var(--gradient-red);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+        
+        .contact-description {
+            color: #ddd;
+            margin-bottom: 3rem;
+            font-size: 1.2rem;
+            max-width: 90%;
+            line-height: 1.8;
+        }
+        
+        .contact-details {
+            margin-bottom: 3rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 2.5rem;
+        }
+        
+        .contact-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .contact-item-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-red);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.8rem;
+            flex-shrink: 0;
+            box-shadow: var(--glow-red);
+        }
+        
+        .contact-item-icon i {
+            font-size: 1.8rem;
+            color: var(--white);
+        }
+        
+        .contact-item-content h4 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+        
+        .contact-item-content p {
+            color: #bbb;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-link {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .social-link:hover {
+            background: var(--gradient-red);
+            transform: translateY(-5px);
+            border-color: transparent;
+        }
+        
+        .contact-form {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 2.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            font-size: 1.1rem;
+            color: #eee;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(30, 30, 30, 0.3);
+            color: var(--white);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+            background: rgba(40, 40, 40, 0.5);
+        }
+        
+        .form-control::placeholder {
+            color: #777;
+        }
+        
+        textarea.form-control {
+            height: 180px;
+            resize: vertical;
+        }
+        
+        .contact-submit-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem 2.5rem;
+            background: var(--gradient-red);
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            gap: 12px;
+            box-shadow: var(--glow-red);
+            font-family: 'Sora', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .contact-submit-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255, 62, 62, 0.4);
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--darker);
+            position: relative;
+        }
+        
+        .footer-top {
+            padding: 6rem 0 4rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 2fr;
+            gap: 4rem;
+        }
+        
+        .footer-brand {
+            padding-right: 2rem;
+        }
+        
+        .footer-logo {
+            font-family: 'Sora', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--white);
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+        
+        .footer-logo span {
+            color: var(--primary);
+        }
+        
+        .footer-about {
+            color: #bbb;
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .footer-social-link {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+        
+        .footer-social-link:hover {
+            background: var(--gradient-red);
+            transform: translateY(-5px);
+        }
+        
+        .footer-links-wrapper {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .footer-heading {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 0.8rem;
+            color: var(--white);
+        }
+        
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--primary);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 1.2rem;
+        }
+        
+        .footer-links a {
+            color: #bbb;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-left: 1.5rem;
+            display: inline-block;
+            font-size: 1.05rem;
+        }
+        
+        .footer-links a::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--white);
+            padding-left: 2rem;
+        }
+        
+        .footer-links a:hover::before {
+            left: 0.5rem;
+        }
+        
+        .footer-bottom {
+            padding: 2rem 0;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .footer-bottom-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .copyright {
+            color: #888;
+            font-size: 0.95rem;
+        }
+        
+        .footer-bottom-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-bottom-links a {
+            color: #888;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        .footer-bottom-links a:hover {
+            color: var(--primary);
+        }
+        
+        /* Particle Effect */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--accent);
+            opacity: 0.5;
+        }
+        
+        /* Scroll To Top */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 99;
+            box-shadow: var(--glow-red);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .scroll-top.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .scroll-top:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .hero h1 {
+                font-size: 4rem;
+            }
+            
+            .section-title {
+                font-size: 3rem;
+            }
+            
+            .step-number {
+                font-size: 8rem;
+                top: -6rem;
+            }
+            
+            .contact-title {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .hero-grid, .contact-wrapper {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            
+            .hero-image {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+            
+            .section-title {
+                font-size: 2.8rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+            
+            .step {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                text-align: center;
+            }
+            
+            .step:nth-child(even) {
+                direction: ltr;
+            }
+            
+            .step-content {
+                order: 2;
+            }
+            
+            .step-image {
+                order: 1;
+            }
+            
+            .step-number {
+                top: -5rem;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 7rem;
+            }
+            
+            .step-title::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .connector {
+                height: 6rem;
+                bottom: -3rem;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            
+            .footer-links-wrapper {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            :root {
+                --section-padding: 80px 0;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                height: 100vh;
+                background: var(--gray-dark);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.5s ease;
+                z-index: 1001;
+                padding: 2rem;
+            }
+            
+            .nav-menu.active {
+                right: 0;
+            }
+            
+            .mobile-toggle {
+                display: block;
+                z-index: 1002;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+                padding-left: 3rem;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-description {
+                font-size: 1.1rem;
+            }
+            
+            .feature-card, .application-card {
+                padding: 2.5rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            
+            .contact-form {
+                padding: 2.5rem;
+            }
+            
+            .footer-links-wrapper {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .footer-heading::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .footer-links a {
+                padding-left: 0;
+            }
+            
+            .footer-links a::before {
+                display: none;
+            }
+            
+            .footer-links a:hover {
+                padding-left: 0;
+                transform: translateX(5px);
+            }
+            
+            .footer-bottom-content {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+            
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero-subtitle {
+                padding-left: 0;
+                font-size: 0.9rem;
+            }
+            
+            .hero-subtitle::before {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .section-subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .feature-icon, .application-icon {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .feature-icon i, .application-icon i {
+                font-size: 1.8rem;
+            }
+            
+            .step-number {
+                font-size: 5rem;
+                top: -4rem;
+            }
+            
+            .step-title {
+                font-size: 2rem;
+            }
+            
+            .contact-info {
+                padding: 2rem;
+            }
+            
+            .contact-title {
+                font-size: 2.2rem;
+            }
+            
+            .contact-item-icon {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .contact-item-icon i {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</head>
+<body>
+    <!-- Particle Background -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Scroll To Top -->
+    <div class="scroll-top" id="scrollTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
+    <!-- Header -->
+    <header id="header">
+        <div class="container">
+            <div class="header-container">
+                <a href="#" class="logo">Res<span>Qon</span></a>
+                <nav>
+                    <ul class="nav-menu" id="nav-menu">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#applications">Applications</a></li>
+                        <li><a href="#team">Team</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="{% url 'starts:starts' %}" class="nav-cta">Get Started</a></li>
+                    </ul>
+                    <button class="mobile-toggle" id="mobile-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <p class="hero-subtitle">AI-Powered Rescue Technology</p>
+                    <h1>Saving Lives With <span>Advanced Drone</span> Technology</h1>
+                    <p class="hero-description">ResQon is an AI-powered drone system designed to locate and rescue people in fire emergency situations, providing real-time navigation and detection capabilities.</p>
+                    <div class="hero-buttons">
+                        <a href="#features" class="btn btn-primary">
+                            <span>Discover More</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="#contact" class="btn btn-secondary">
+                            <span>Contact Us</span>
+                            <i class="fas fa-headset"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="{% static 'img/drone.png' %}" alt="ResQon Drone">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-subtitle">Core Capabilities</p>
+                <h2 class="section-title">Key Features</h2>
+                <p class="section-description">ResQon combines cutting-edge AI technology with advanced drone systems to revolutionize rescue operations in fire emergency situations.</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="feature-title">AI-Powered Detection</h3>
+                    <p class="feature-description">Using deep learning algorithms (CNN, Decision Tree) to automatically detect humans in video feeds, even through smoke or limited visibility conditions.</p>
+                    <a href="{% url 'ai_detection:ai_detection' %}" class="feature-link">Learn more <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Real-time Pathfinding</h3>
+                    <p class="feature-description">Generating optimal rescue routes based on building layouts and delivering real-time guidance to rescue teams for efficient navigation.</p>
+                    <a href="{% url 'pathfinding:pathfinding' %}" class="feature-link">Learn more <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Obstacle Avoidance</h3>
+                    <p class="feature-description">AI prediction for invisible obstacles with automatic avoidance and immediate re-routing when changes occur during rescue operations.</p>
+                    <a href="{% url 'obstacle_avoidance:obstacle_avoidance' %}" class="feature-link">Learn more <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-subtitle">Process</p>
+                <h2 class="section-title">How ResQon Works</h2>
+                <p class="section-description">Discover how our advanced drone system operates in fire emergency situations to maximize rescue efficiency.</p>
+            </div>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-content">
+                        <div class="step-number">01</div>
+                        <h3 class="step-title">Fire Detection & Drone Deployment</h3>
+                        <p class="step-description">When a fire occurs, rescue teams deploy the ResQon drone which immediately begins scanning the building using floor plans for initial navigation.</p>
+                    </div>
+                    <div class="step-image">
+                        <img src="{% static 'img/rescueD.png' %}" alt="Drone Deployment">
+                    </div>
+                    <div class="connector"></div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-content">
+                        <div class="step-number">02</div>
+                        <h3 class="step-title">AI-Based Human Detection</h3>
+                        <p class="step-description">The fire-resistant drone enters the scene using thermal cameras and computer vision technology to detect survivors even through smoke and high-temperature environments.</p>
+                    </div>
+                    <div class="step-image">
+                        <img src="{% static 'img/detec.png' %}" alt="AI Detection">
+                    </div>
+                    <div class="connector"></div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-content">
+                        <div class="step-number">03</div>
+                        <h3 class="step-title">Real-time Route Analysis</h3>
+                        <p class="step-description">Once survivors are located, AI algorithms calculate the optimal rescue routes considering building structure and fire conditions, transmitting this data in real-time to rescue teams.</p>
+                    </div>
+                    <div class="step-image">
+                        <img src="{% static 'img/analy.png' %}" alt="Route Analysis">
+                    </div>
+                    <div class="connector"></div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-content">
+                        <div class="step-number">04</div>
+                        <h3 class="step-title">Rescue Operation Support</h3>
+                        <p class="step-description">Rescue teams use ResQon's guidance to safely and quickly reach survivors, with the system continuously recalculating routes to adapt to changing fire conditions.</p>
+                    </div>
+                    <div class="step-image">
+                        <img src="{% static 'img/rescue_d.png' %}" alt="Rescue Operation">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Applications Section -->
+    <section class="applications" id="applications">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-subtitle">Use Cases</p>
+                <h2 class="section-title">Application Areas</h2>
+                <p class="section-description">ResQon can be deployed in various environments and rescue scenarios where rapid response is critical.</p>
+            </div>
+            
+            <div class="applications-grid">
+                <div class="application-card">
+                    <div class="application-icon">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <h3 class="application-title">Industrial Facilities</h3>
+                    <p class="application-description">Large warehouses, factories, and power plants with complex layouts benefit from ResQon's advanced navigation capabilities and fire-resistant design.</p>
+                </div>
+                
+                <div class="application-card">
+                    <div class="application-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <h3 class="application-title">Commercial Buildings</h3>
+                    <p class="application-description">Shopping malls, high-rise buildings, and underground markets where large numbers of people gather and complex evacuation routes are needed.</p>
+                </div>
+                
+                <div class="application-card">
+                    <div class="application-icon">
+                        <i class="fas fa-hospital"></i>
+                    </div>
+                    <h3 class="application-title">Public Facilities</h3>
+                    <p class="application-description">Hospitals, schools, subway stations and other public institutions requiring rapid evacuation assistance and precise locating of trapped individuals.</p>
+                </div>
+                
+                <div class="application-card">
+                    <div class="application-icon">
+                        <i class="fas fa-tree"></i>
+                    </div>
+                    <h3 class="application-title">Natural Disasters</h3>
+                    <p class="application-description">Forest fires, earthquakes and other natural disaster sites requiring survivor search and rescue operations in difficult-to-navigate environments.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Team Section -->
+    <section class="team" id="team">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-subtitle">Our Team</p>
+                <h2 class="section-title">Meet The Creators</h2>
+                <p class="section-description">The talented minds behind ResQon's innovative rescue drone technology.</p>
+            </div>
+            
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="{% static 'img/GG.jpeg' %}" alt="Team Member 1">
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">Kwon Sun-min</h3>
+                        <p class="member-role">CEO</p>
+                        <p class="member-bio">AI and drone technology expert with extensive experience in computer vision and deep learning algorithms.</p>
+                        <div class="member-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="{% static 'img/SS.jpeg' %}" alt="Team Member 2">
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">Kim Si-woo</h3>
+                        <p class="member-role">CTO & Lead Engineer</p>
+                        <p class="member-bio">Hardware design specialist with expertise in developing drones capable of operating in extreme environments.</p>
+                        <div class="member-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="https://via.placeholder.com/400x500" alt="Team Member 3">
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">Kim Se-joon</h3>
+                        <p class="member-role">COO & Drone Developer</p>
+                        <p class="member-bio">Leads the development of pathfinding algorithms and computer vision systems for our rescue drones.</p>
+                        <div class="member-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="{% static 'img/JJ.jpeg' %}" alt="Team Member 4">
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">Jang Jin-gwan</h3>
+                        <p class="member-role">Design Engineer & Material Specialist</p>
+                        <p class="member-bio">Expert in developing user-friendly interfaces and real-time data visualization for rescue teams.</p>
+                        <div class="member-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-subtitle">Get In Touch</p>
+                <h2 class="section-title">Contact Us</h2>
+                <p class="section-description">Interested in learning more about ResQon? Reach out to us for more information or a demonstration.</p>
+            </div>
+            
+            <div class="contact-wrapper">
+                <div class="contact-info">
+                    <div class="contact-info-inner">
+                        <h3 class="contact-title">Ready to transform rescue operations?</h3>
+                        <p class="contact-description">We're here to answer your questions and provide more information about our cutting-edge drone technology.</p>
+                        
+                        <div class="contact-details">
+                            <div class="contact-item">
+                                <div class="contact-item-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="contact-item-content">
+                                    <h4>Address</h4>
+                                    <p>324-213 Misari-ro, Seorak-myeon, Gapyeong-gun, Gyeonggi-do</p>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-item">
+                                <div class="contact-item-icon">
+                                    <i class="fas fa-phone-alt"></i>
+                                </div>
+                                <div class="contact-item-content">
+                                    <h4>Phone</h4>
+                                    <p>+82 1234-5678</p>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-item">
+                                <div class="contact-item-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="contact-item-content">
+                                    <h4>Email</h4>
+                                    <p>ResQon.inc@gmail.com</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <form>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" id="name" class="form-control" placeholder="Enter your name">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" id="email" class="form-control" placeholder="Enter your email">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject" class="form-label">Subject</label>
+                            <input type="text" id="subject" class="form-control" placeholder="What is this regarding?">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea id="message" class="form-control" placeholder="How can we help you?"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="contact-submit-btn">
+                            <span>Send Message</span>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <a href="#" class="footer-logo">Res<span>Qon</span></a>
+                        <p class="footer-about">ResQon is an AI-powered rescue drone system designed to save lives in fire emergency situations through advanced technology and innovation.</p>
+                        <div class="footer-social">
+                            <a href="#" class="footer-social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="footer-social-link"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="footer-social-link"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="footer-social-link"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-links-wrapper">
+                        <div class="footer-links-column">
+                            <h4 class="footer-heading">Quick Links</h4>
+                            <ul class="footer-links">
+                                <li><a href="#home">Home</a></li>
+                                <li><a href="#features">Features</a></li>
+                                <li><a href="#how-it-works">How It Works</a></li>
+                                <li><a href="#applications">Applications</a></li>
+                                <li><a href="#team">Team</a></li>
+                                <li><a href="#contact">Contact</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="footer-links-column">
+                            <h4 class="footer-heading">Resources</h4>
+                            <ul class="footer-links">
+                                <li><a href="#">Case Studies</a></li>
+                                <li><a href="#">Documentation</a></li>
+                                <li><a href="#">Blog</a></li>
+                                <li><a href="#">News</a></li>
+                                <li><a href="#">FAQ</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="footer-links-column">
+                            <h4 class="footer-heading">Legal</h4>
+                            <ul class="footer-links">
+                                <li><a href="#">Privacy Policy</a></li>
+                                <li><a href="#">Terms of Service</a></li>
+                                <li><a href="#">Cookie Policy</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="footer-bottom-content">
+                    <p class="copyright">&copy; 2025 ResQon. All Rights Reserved.</p>
+                    <div class="footer-bottom-links">
+                        <a href="#">Privacy</a>
+                        <a href="#">Terms</a>
+                        <a href="#">Cookies</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Particle effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size
+                const size = Math.random() * 5 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation
+                particle.style.animation = `pulse ${Math.random() * 4 + 2}s infinite`;
+                
+                particlesContainer.appendChild(particle);
+            }
+            
+            // Header scroll effect
+            const header = document.getElementById('header');
+            const scrollTop = document.getElementById('scrollTop');
+            
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+                
+                if (window.scrollY > 500) {
+                    scrollTop.classList.add('active');
+                } else {
+                    scrollTop.classList.remove('active');
+                }
+            });
+            
+            // Scroll to top
+            scrollTop.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Mobile menu toggle
+            const mobileToggle = document.getElementById('mobile-toggle');
+            const navMenu = document.getElementById('nav-menu');
+            
+            mobileToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                mobileToggle.classList.toggle('active');
+            });
+            
+            // Close mobile menu when clicking on a link
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    navMenu.classList.remove('active');
+                    mobileToggle.classList.remove('active');
+                });
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Animation for feature cards
+            const featureCards = document.querySelectorAll('.feature-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.transform = 'translateY(0)';
+                        entry.target.style.opacity = '1';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            featureCards.forEach(card => {
+                card.style.transform = 'translateY(50px)';
+                card.style.opacity = '0';
+                card.style.transition = 'transform 0.6s ease, opacity 0.6s ease';
+                observer.observe(card);
+            });
+            
+            // Animation for team members
+            const teamMembers = document.querySelectorAll('.team-member');
+            const teamObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.style.transform = 'translateY(0)';
+                            entry.target.style.opacity = '1';
+                        }, index * 200);
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            teamMembers.forEach(member => {
+                member.style.transform = 'translateY(50px)';
+                member.style.opacity = '0';
+                member.style.transition = 'transform 0.6s ease, opacity 0.6s ease';
+                teamObserver.observe(member);
+            });
+        });
+    </script>
+</body>
+</html>

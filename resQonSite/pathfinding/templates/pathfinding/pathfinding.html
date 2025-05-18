@@ -1,0 +1,1090 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Pathfinding - ResQon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ff3e3e;
+            --secondary: #4d00e6;
+            --accent: #00f2ff;
+            --dark: #0a0a0a;
+            --darker: #050505;
+            --gray-dark: #181818;
+            --gray: #333;
+            --light-gray: #aaa;
+            --white: #fff;
+            --glow-red: 0 0 20px rgba(255, 62, 62, 0.4);
+            --glow-blue: 0 0 20px rgba(0, 242, 255, 0.4);
+            --gradient-red: linear-gradient(45deg, var(--primary), #ff7b00);
+            --gradient-blue: linear-gradient(45deg, var(--secondary), var(--accent));
+            --card-bg: linear-gradient(145deg, rgba(30, 30, 30, 0.4), rgba(15, 15, 15, 0.6));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--dark);
+            color: var(--white);
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 80% 20%, rgba(77, 0, 230, 0.15), transparent 50%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .back-link {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-link:hover {
+            background: var(--gradient-red);
+            transform: translateX(-5px);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            margin-top: 3rem;
+        }
+
+        .logo {
+            font-family: 'Sora', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--white);
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: var(--primary);
+            position: relative;
+        }
+
+        .logo span::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary);
+            box-shadow: var(--glow-red);
+        }
+
+        .feature-hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin: 5rem 0;
+            position: relative;
+        }
+
+        .feature-content {
+            position: relative;
+        }
+
+        .feature-tag {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--dark);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            box-shadow: var(--glow-blue);
+        }
+
+        .feature-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 2rem;
+            background: var(--gradient-blue);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .feature-description {
+            color: var(--light-gray);
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+        }
+
+        .feature-image {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.5s ease;
+        }
+
+        .feature-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .section {
+            margin: 6rem 0;
+        }
+
+        .section-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--white);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        .section-description {
+            color: var(--light-gray);
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin-bottom: 3rem;
+            line-height: 1.8;
+        }
+
+        .how-it-works {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        .map-animation {
+            position: relative;
+            height: 500px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .map-animation img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .process-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .process-step {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .process-step:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--white);
+            box-shadow: var(--glow-blue);
+        }
+
+        .step-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .step-description {
+            color: var(--light-gray);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .tech-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .tech-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .tech-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-blue);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--glow-blue);
+        }
+
+        .tech-icon i {
+            font-size: 2rem;
+            color: var(--white);
+        }
+
+        .tech-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .tech-description {
+            color: var(--light-gray);
+            line-height: 1.7;
+        }
+
+        .benefits-section {
+            margin: 6rem 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2.5rem;
+        }
+
+        .benefit-card {
+            display: flex;
+            gap: 1.5rem;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .benefit-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: var(--glow-blue);
+        }
+
+        .benefit-icon i {
+            font-size: 1.5rem;
+            color: var(--white);
+        }
+
+        .benefit-content {
+            flex: 1;
+        }
+
+        .benefit-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .benefit-description {
+            color: var(--light-gray);
+            line-height: 1.7;
+        }
+
+        .integration-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 4rem;
+        }
+
+        .integration-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--white);
+            text-align: center;
+        }
+
+        .integration-description {
+            color: var(--light-gray);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .integration-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .integration-item {
+            background: rgba(30, 30, 30, 0.5);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .integration-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .integration-item-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .integration-item-description {
+            color: var(--light-gray);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .case-study {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 4rem;
+        }
+
+        .case-study-header {
+            padding: 3rem;
+            background: rgba(30, 30, 30, 0.5);
+        }
+
+        .case-study-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .case-study-subtitle {
+            color: var(--accent);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .case-study-description {
+            color: var(--light-gray);
+            line-height: 1.8;
+        }
+
+        .case-study-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .case-study-image {
+            height: 300px;
+        }
+
+        .case-study-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .case-study-content {
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .case-result {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .case-result:last-child {
+            margin-bottom: 0;
+        }
+
+        .case-result-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-right: 1.5rem;
+            line-height: 1;
+        }
+
+        .case-result-text {
+            color: var(--light-gray);
+            line-height: 1.6;
+        }
+
+        .specs-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 4rem;
+        }
+
+        .specs-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--white);
+            text-align: center;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2.5rem;
+        }
+
+        .spec-group {
+            margin-bottom: 2rem;
+        }
+
+        .spec-group-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .spec-label {
+            color: var(--light-gray);
+        }
+
+        .spec-value {
+            color: var(--white);
+            font-weight: 500;
+        }
+
+        .cta-section {
+            text-align: center;
+            margin: 6rem 0;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 4rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://via.placeholder.com/1920x1080') center/cover no-repeat;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .cta-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+        }
+
+        .cta-text {
+            color: var(--light-gray);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem 2.5rem;
+            background: var(--gradient-blue);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: var(--glow-blue);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 242, 255, 0.3);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            border: 1px solid var(--primary);
+            box-shadow: var(--glow-red);
+        }
+
+        .cta-button.secondary:hover {
+            background: var(--primary);
+            box-shadow: 0 15px 30px rgba(255, 62, 62, 0.3);
+        }
+
+        footer {
+            margin-top: 4rem;
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        footer p {
+            color: var(--light-gray);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1200px) {
+            .feature-hero, .how-it-works {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .tech-container, .integration-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+
+            .specs-grid, .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .case-study-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .case-study-image {
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .feature-title {
+                font-size: 2.5rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                gap: 1rem;
+                max-width: 300px;
+                margin: 0 auto;
+            }
+
+            .back-link {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Home</span>
+    </a>
+
+    <div class="container">
+        <header class="header">
+            <a href="/" class="logo">Res<span>Qon</span></a>
+        </header>
+
+        <section class="feature-hero">
+            <div class="feature-content">
+                <span class="feature-tag">Navigation Technology</span>
+                <h1 class="feature-title">Real-time Pathfinding</h1>
+                <p class="feature-description">
+                    ResQon's advanced pathfinding system creates optimal rescue routes in real-time, enabling rescue teams to navigate safely and efficiently through complex building layouts during emergency situations.
+                </p>
+                <p class="feature-description">
+                    Using a combination of building floor plans, dynamic environment mapping, and AI-driven decision making, our system calculates the safest and most direct paths to reach survivors while avoiding hazards and impassable areas.
+                </p>
+            </div>
+            <div class="feature-image">
+                <img src="{% static 'img/path.png' %}" alt="Real-time Pathfinding">
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-description">
+                Our pathfinding system combines pre-loaded building information with real-time sensor data to generate optimal rescue routes that adapt to changing conditions during emergency situations.
+            </p>
+
+            <div class="how-it-works">
+                <div class="map-animation">
+                    <img src="{% static 'img/' %}" alt="Pathfinding Animation">
+                </div>
+                <div class="process-steps">
+                    <div class="process-step">
+                        <span class="step-number">1</span>
+                        <h3 class="step-title">Building Map Integration</h3>
+                        <p class="step-description">
+                            The system starts with digital floor plans of the building, including detailed information about room layouts, corridors, stairwells, and potential escape routes. This provides the baseline map for navigation.
+                        </p>
+                    </div>
+                    
+                    <div class="process-step">
+                        <span class="step-number">2</span>
+                        <h3 class="step-title">Real-time Environmental Mapping</h3>
+                        <p class="step-description">
+                            As the drone navigates through the building, it continuously scans and updates the environmental map, identifying new obstacles, blocked passages, and structural changes caused by the emergency.
+                        </p>
+                    </div>
+                    
+                    <div class="process-step">
+                        <span class="step-number">3</span>
+                        <h3 class="step-title">Path Calculation</h3>
+                        <p class="step-description">
+                            Using advanced algorithms, the system processes the updated map to generate optimal paths between the rescue team's position and identified survivors, considering factors like distance, safety, and accessibility.
+                        </p>
+                    </div>
+                    
+                    <div class="process-step">
+                        <span class="step-number">4</span>
+                        <h3 class="step-title">Real-time Transmission</h3>
+                        <p class="step-description">
+                            The calculated paths are immediately transmitted to rescue team devices, providing clear visual guidance through AR displays and simple directional indicators that work even in low-visibility conditions.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Key Technologies</h2>
+            <p class="section-description">
+                Our pathfinding system integrates several advanced technologies to provide accurate and reliable navigation guidance in emergency scenarios.
+            </p>
+
+            <div class="tech-container">
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h3 class="tech-title">SLAM Technology</h3>
+                    <p class="tech-description">
+                        Simultaneous Localization and Mapping (SLAM) algorithms allow the drone to create detailed 3D maps of the environment while simultaneously tracking its position within that environment, even without GPS signals.
+                    </p>
+                </div>
+
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-sitemap"></i>
+                    </div>
+                    <h3 class="tech-title">A* Pathfinding</h3>
+                    <p class="tech-description">
+                        Our enhanced A* algorithm optimizes path selection by considering multiple factors including distance, heat levels, structural integrity, and known hazards to determine the safest and most efficient route for rescuers.
+                    </p>
+                </div>
+
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h3 class="tech-title">Dynamic Rerouting</h3>
+                    <p class="tech-description">
+                        The system continuously monitors the environment and can instantly recalculate paths if new obstacles are detected, paths become blocked, or safer routes emerge as conditions change during the rescue operation.
+                    </p>
+                </div>
+
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="tech-title">Building Information Modeling</h3>
+                    <p class="tech-description">
+                        Integration with Building Information Modeling (BIM) data provides detailed structural information, allowing the pathfinding system to consider wall materials, support structures, and other architectural elements in its calculations.
+                    </p>
+                </div>
+
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-vr-cardboard"></i>
+                    </div>
+                    <h3 class="tech-title">AR Visualization</h3>
+                    <p class="tech-description">
+                        Augmented Reality interfaces display navigation data directly in rescuers' field of view, with intuitive visual cues that can be followed even in low-visibility conditions, keeping hands free for rescue operations.
+                    </p>
+                </div>
+
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <h3 class="tech-title">Mesh Network Communication</h3>
+                    <p class="tech-description">
+                        Our drones establish a self-forming mesh network that extends communication range even in signal-challenging environments, ensuring pathfinding data reaches rescue teams regardless of building materials or infrastructure damage.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="benefits-section">
+            <h2 class="section-title">Key Benefits</h2>
+            <p class="section-description">
+                ResQon's pathfinding capabilities deliver significant advantages for emergency rescue operations.
+            </p>
+
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <div class="benefit-content">
+                        <h3 class="benefit-title">Reduced Response Time</h3>
+                        <p class="benefit-description">
+                            Optimized path calculation reduces the time needed to reach survivors by up to 43% compared to traditional search methods, significantly increasing survival rates in time-critical situations.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="benefit-content">
+                        <h3 class="benefit-title">Enhanced Rescuer Safety</h3>
+                        <p class="benefit-description">
+                            By identifying hazards and calculating safer routes, the system reduces rescuer exposure to dangerous conditions, minimizing the risk of injury during emergency operations.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <div class="benefit-content">
+                        <h3 class="benefit-title">GPS-Independent Navigation</h3>
+                        <p class="benefit-description">
+                            The system functions independently of GPS signals, allowing for reliable indoor navigation through multiple floors, basement levels, and signal-blocking structures.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <div class="benefit-content">
+                        <h3 class="benefit-title">Adaptive Decision Making</h3>
+                        <p class="benefit-description">
+                            Real-time response to changing conditions ensures that rescue teams always have current information, even when the emergency situation evolves rapidly during the operation.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="integration-section">
+            <h2 class="integration-title">Protocol Integration</h2>
+            <p class="integration-description">
+                ResQon's pathfinding system integrates seamlessly with existing emergency response protocols, enhancing operations without disrupting established procedures.
+            </p>
+
+            <div class="integration-grid">
+                <div class="integration-item">
+                    <h3 class="integration-item-title">Command Structure</h3>
+                    <p class="integration-item-description">
+                        Pathfinding data flows through the established incident command system, providing enhanced information without changing operational hierarchies or decision-making chains.
+                    </p>
+                </div>
+
+                <div class="integration-item">
+                    <h3 class="integration-item-title">Team Communication</h3>
+                    <p class="integration-item-description">
+                        Path information is distributed to team members according to existing communication protocols, with options for integration into radio systems and other standard communication channels.
+                    </p>
+                </div>
+
+                <div class="integration-item">
+                    <h3 class="integration-item-title">Training Requirements</h3>
+                    <p class="integration-item-description">
+                        The intuitive interface minimizes additional training needs, with most fire departments requiring just 4-6 hours of familiarization to effectively utilize the system during operations.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="case-study">
+            <div class="case-study-header">
+                <h2 class="case-study-title">Case Study: Multi-Floor Commercial Building</h2>
+                <p class="case-study-subtitle">Chicago Fire Department Implementation</p>
+                <p class="case-study-description">
+                    During a simulated high-rise emergency exercise, ResQon's pathfinding system was tested against traditional navigation methods in a 20-story commercial building with multiple fire outbreak points and simulated structural failures.
+                </p>
+            </div>
+            <div class="case-study-grid">
+                <div class="case-study-image">
+                    <img src="https://via.placeholder.com/600x400" alt="Case Study Building">
+                </div>
+                <div class="case-study-content">
+                    <div class="case-result">
+                        <div class="case-result-number">43%</div>
+                        <div class="case-result-text">
+                            Reduction in time needed to locate and reach simulated victims compared to traditional search methods.
+                        </div>
+                    </div>
+                    <div class="case-result">
+                        <div class="case-result-number">91%</div>
+                        <div class="case-result-text">
+                            Of generated paths successfully avoided hazardous areas as verified by independent evaluators.
+                        </div>
+                    </div>
+                    <div class="case-result">
+                        <div class="case-result-number">64%</div>
+                        <div class="case-result-text">
+                            Decrease in rescuer exposure to simulated high-temperature zones during the operation.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="specs-section">
+            <h2 class="specs-title">Technical Specifications</h2>
+            <div class="specs-grid">
+                <div class="spec-column">
+                    <div class="spec-group">
+                        <h4 class="spec-group-title">Pathfinding System</h4>
+                        <div class="spec-item">
+                            <span class="spec-label">Algorithm Type</span>
+                            <span class="spec-value">Enhanced A* with Multi-factor Weighting</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Update Frequency</span>
+                            <span class="spec-value">10Hz (every 100ms)</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Path Calculation Time</span>
+                            <span class="spec-value">&lt; 200ms for 5000m² area</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Maximum Building Size</span>
+                            <span class="spec-value">100,000m² (multi-drone setup)</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Maximum Floor Support</span>
+                            <span class="spec-value">50 floors with vertical connectivity</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="spec-column">
+                    <div class="spec-group">
+                        <h4 class="spec-group-title">Navigation Interface</h4>
+                        <div class="spec-item">
+                            <span class="spec-label">Display Types</span>
+                            <span class="spec-value">AR Headset, Tablet, Command Center</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Navigation Accuracy</span>
+                            <span class="spec-value">±0.5m position, real-time updates</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Communication Range</span>
+                            <span class="spec-value">300m with mesh network extension</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Low-Visibility Mode</span>
+                            <span class="spec-value">Haptic + Audio guidance available</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Map Storage</span>
+                            <span class="spec-value">Cloud + Local Edge Computing</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h2 class="cta-title">Navigate with Confidence</h2>
+            <p class="cta-text">
+                Discover how ResQon's real-time pathfinding technology can enhance your emergency response capabilities and improve rescue success rates.
+            </p>
+            <div class="cta-buttons">
+                <a href="/get-started" class="cta-button">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>See It In Action</span>
+                </a>
+                <a href="/contact" class="cta-button secondary">
+                    <i class="fas fa-headset"></i>
+                    <span>Request a Demo</span>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 ResQon. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Intersection Observer for animations
+            const animateElements = document.querySelectorAll('.tech-card, .benefit-card, .process-step, .integration-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = entry.target.classList.contains('benefit-card') ? 
+                            'translateY(0)' : 
+                            entry.target.classList.contains('process-step') ? 
+                                'translateY(0)' : 'translateY(0)';
+                        
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            animateElements.forEach((el) => {
+                // Set initial styles
+                el.style.opacity = 0;
+                el.style.transform = el.classList.contains('benefit-card') ? 
+                    'translateY(30px)' : 
+                    el.classList.contains('process-step') ? 
+                        'translateY(30px)' : 'translateY(30px)';
+                
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                
+                // Observe element
+                observer.observe(el);
+            });
+            
+            // Staggered animation for process steps
+            const processSteps = document.querySelectorAll('.process-step');
+            processSteps.forEach((step, index) => {
+                step.style.transitionDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+</body>
+</html>

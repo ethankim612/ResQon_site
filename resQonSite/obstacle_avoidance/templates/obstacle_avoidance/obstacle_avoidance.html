@@ -1,0 +1,171 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obstacle Avoidance - ResQon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ff3e3e;
+            --secondary: #4d00e6;
+            --accent: #00f2ff;
+            --dark: #0a0a0a;
+            --darker: #050505;
+            --gray-dark: #181818;
+            --gray: #333;
+            --light-gray: #aaa;
+            --white: #fff;
+            --glow-red: 0 0 20px rgba(255, 62, 62, 0.4);
+            --glow-blue: 0 0 20px rgba(0, 242, 255, 0.4);
+            --gradient-red: linear-gradient(45deg, var(--primary), #ff7b00);
+            --gradient-blue: linear-gradient(45deg, var(--secondary), var(--accent));
+            --card-bg: linear-gradient(145deg, rgba(30, 30, 30, 0.4), rgba(15, 15, 15, 0.6));
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--dark);
+            color: var(--white);
+            line-height: 1.6;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .back-to-home {
+            position: fixed; top: 2rem; left: 2rem; background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px); padding: 0.8rem 1.5rem; border-radius: 50px;
+            display: flex; align-items: center; gap: 0.5rem; text-decoration: none;
+            color: var(--white); font-weight: 500; transition: all 0.3s ease; z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .back-to-home:hover { background: var(--gradient-red); transform: translateX(-5px); }
+        .header { text-align: center; margin: 5rem 0 4rem; }
+        .header h1 {
+            font-family: 'Sora', sans-serif; font-size: 3.5rem; margin-bottom: 1.5rem;
+            background: var(--gradient-red); -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .header p { color: var(--light-gray); font-size: 1.3rem; max-width: 800px; margin: 0 auto; }
+        .content-section { margin-bottom: 4rem; }
+        .section-title { font-family: 'Sora', sans-serif; font-size: 2.5rem; margin-bottom: 2rem; color: var(--white); }
+        .section-content {
+            background: var(--card-bg); border-radius: 20px; padding: 3rem; margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .section-content p { color: var(--light-gray); font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem; }
+        .feature-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;
+        }
+        .feature-card {
+            background: var(--card-bg); border-radius: 15px; padding: 2rem; border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .feature-card:hover { transform: translateY(-10px); }
+        .feature-icon { width: 60px; height: 60px; background: var(--gradient-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
+        .feature-icon i { font-size: 1.5rem; color: var(--white); }
+        .feature-title { font-family: 'Sora', sans-serif; font-size: 1.5rem; margin-bottom: 1rem; color: var(--white); }
+        .feature-description { color: var(--light-gray); line-height: 1.7; }
+        .tech-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 3rem;
+        }
+        .tech-card {
+            background: var(--card-bg); border-radius: 15px; padding: 2rem; border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        .tech-icon { width: 50px; height: 50px; background: var(--gradient-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
+        .tech-icon i { font-size: 1.3rem; color: var(--white); }
+        .tech-title { font-family: 'Sora', sans-serif; font-size: 1.3rem; margin-bottom: 1rem; color: var(--white); }
+        .tech-description { color: var(--light-gray); line-height: 1.7; }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.5rem; }
+            .section-title { font-size: 2rem; }
+            .section-content { padding: 2rem; }
+            .back-to-home { top: 1rem; left: 1rem; padding: 0.5rem 1rem; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-to-home">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Home</span>
+    </a>
+    <div class="container">
+        <div class="header">
+            <h1>Obstacle Avoidance</h1>
+            <p>Advanced AI-powered system for real-time detection, prediction, and avoidance of obstacles during rescue operations. Ensures safe navigation and uninterrupted mission flow even in dynamic and hazardous environments.</p>
+        </div>
+        <div class="content-section">
+            <h2 class="section-title">How It Works</h2>
+            <div class="section-content">
+                <p>Our obstacle avoidance system leverages advanced AI algorithms and multi-sensor fusion to detect, predict, and avoid obstacles in real-time. The system continuously scans the environment, identifies both visible and invisible hazards, and instantly recalculates the safest route for the drone and rescue team.</p>
+                <ul style="color: var(--light-gray); margin-left: 2rem; margin-bottom: 1.5rem;">
+                    <li>Real-time environment scanning with LIDAR, radar, and vision sensors</li>
+                    <li>AI-based prediction of potential hazards (e.g., falling debris, blocked passages)</li>
+                    <li>Automatic avoidance maneuvers and path re-routing</li>
+                    <li>Continuous feedback loop for dynamic environments</li>
+                    <li>Failsafe protocols for emergency stops and manual override</li>
+                </ul>
+            </div>
+        </div>
+        <div class="content-section">
+            <h2 class="section-title">Key Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-radar"></i>
+                    </div>
+                    <h3 class="feature-title">Multi-Sensor Fusion</h3>
+                    <p class="feature-description">Combines data from LIDAR, radar, and cameras to create a comprehensive map of the environment, detecting obstacles in all conditions.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="feature-title">AI Prediction</h3>
+                    <p class="feature-description">Uses machine learning to predict the movement of obstacles and anticipate new hazards, enabling proactive avoidance.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-random"></i>
+                    </div>
+                    <h3 class="feature-title">Automatic Re-routing</h3>
+                    <p class="feature-description">Instantly recalculates the optimal path when new obstacles are detected, ensuring uninterrupted rescue operations.</p>
+                </div>
+            </div>
+        </div>
+        <div class="content-section">
+            <h2 class="section-title">Technology Stack</h2>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3 class="tech-title">Vision & Depth Sensors</h3>
+                    <p class="tech-description">High-resolution cameras and depth sensors provide detailed 3D mapping for precise obstacle detection.</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <h3 class="tech-title">AI Processing</h3>
+                    <p class="tech-description">Onboard AI processors analyze sensor data in real-time for instant decision-making and control.</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-satellite-dish"></i>
+                    </div>
+                    <h3 class="tech-title">Sensor Fusion</h3>
+                    <p class="tech-description">Integrates multiple sensor inputs for a robust and reliable understanding of the environment.</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="tech-title">Safety Protocols</h3>
+                    <p class="tech-description">Built-in emergency stop, manual override, and redundancy systems for maximum operational safety.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
