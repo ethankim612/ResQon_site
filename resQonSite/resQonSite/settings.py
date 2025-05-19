@@ -126,11 +126,6 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
-    BASE_DIR / 'home' / 'static',
-    BASE_DIR / 'starts' / 'static',
-    BASE_DIR / 'ai_detection' / 'static',
-    BASE_DIR / 'pathfinding' / 'static',
-    BASE_DIR / 'obstacle_avoidance' / 'static',
 ]
 
 # Media files configuration
