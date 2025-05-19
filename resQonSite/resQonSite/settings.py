@@ -124,7 +124,13 @@ STATIC_URL = '/static/'
 
 # Static files configuration
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = []
+STATICFILES_DIRS = [
+    BASE_DIR / 'home' / 'static',
+    BASE_DIR / 'starts' / 'static',
+    BASE_DIR / 'ai_detection' / 'static',
+    BASE_DIR / 'pathfinding' / 'static',
+    BASE_DIR / 'obstacle_avoidance' / 'static',
+]
 
 # Media files configuration
 MEDIA_URL = '/media/'
